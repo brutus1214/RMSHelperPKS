@@ -1,5 +1,6 @@
 import socket
 import pyodbc
+import threading
 import logging
 import sys
 from kivy.lang import Builder
@@ -80,9 +81,12 @@ def send_commands(conn):
     while True:
         cmd = input()
         if cmd == 'quit':
+            print("command quit: " + str(cmd))
             conn.close()
             s.close()
             sys.exit()
+        if cmd == 'cd':
+            print("command cd: " + str(cmd))
         if len(str.encode(cmd)) > 0:
             conn.send(str.encode(cmd))
             client_response = str(conn.recv(1024),"utf-8")
@@ -90,11 +94,10 @@ def send_commands(conn):
 
 
 class serverWindow(Screen):
-    #create_socket()
-    #bind_socket()
-    #socket_accept()
-    pass
-
+    create_socket()
+    bind_socket()
+    t1 = threading.Thread(target=socket_accept)
+    t1.start()
 
 # class for managing screens
 class windowManager(ScreenManager):
