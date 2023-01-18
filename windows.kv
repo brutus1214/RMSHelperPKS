@@ -1,10 +1,10 @@
 # there are two screens
-windowManager:
-    loginWindow:
-    serverWindow:
+WindowManager:
+    LoginWindow:
+    ServerWindow:
 
 # GUI for the server window
-<serverWindow>:
+<ServerWindow>:
     orientation: "vertical"
     pos: 0, root.height - 30
     spacing: 10
@@ -82,7 +82,7 @@ windowManager:
             on_press: app.exit()
 
 # GUI for the login window
-<loginWindow>:
+<LoginWindow>:
     MDCard:
         size_hint: None, None
         size: 300, 400

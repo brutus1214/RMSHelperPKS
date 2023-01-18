@@ -22,10 +22,12 @@ import pandas as pd
 class P(FloatLayout):
     pass
 
+
 class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior, RecycleBoxLayout):
     """ Adds selection and focus behaviour to the view. """
     selected_value = StringProperty('')
     btn_info = ListProperty(['Button 0 Text', 'Button 1 Text', 'Button 2 Text', 'Button 3 Text', 'Button 4 Text', 'Button 5 Text'])
+
 
 class ConnectionList(RecycleView):
     rv_layout = ObjectProperty(None)
@@ -34,7 +36,8 @@ class ConnectionList(RecycleView):
         super(ConnectionList, self).__init__(**kwargs)
         self.data = [{'text': "Button " + str(x), 'id': str(x)} for x in range(6)]
 
-class loginWindow(Screen):
+
+class LoginWindow(Screen):
     pass
 
 
@@ -93,18 +96,18 @@ def send_commands(conn):
             print(client_response, end="")
 
 
-class serverWindow(Screen):
+class ServerWindow(Screen):
     create_socket()
     bind_socket()
-    t1 = threading.Thread(target=socket_accept)
+    t1 = threading.Thread(target=socket_accept, daemon=True)
     t1.start()
 
 # class for managing screens
-class windowManager(ScreenManager):
+class WindowManager(ScreenManager):
     pass
 
 
-sm = windowManager()
+sm = WindowManager()
 
 
 class MainApp(MDApp):
@@ -119,8 +122,8 @@ class MainApp(MDApp):
         kv = Builder.load_file('windows.kv')
 
         # adding screens
-        sm.add_widget(loginWindow(name='login'))
-        sm.add_widget(serverWindow(name='server'))
+        sm.add_widget(LoginWindow(name='login'))
+        sm.add_widget(ServerWindow(name='server'))
         sm.current = 'login'
         return sm
 
@@ -191,14 +194,18 @@ class MainApp(MDApp):
         menuscreen.ids.dbname.text = ""
         menuscreen.ids.password.text = ""
 
+
     def exit(self):
-        return self.root_window.close()
+        #return self.root_window.close()
+        return sys.exit()
+
 
     def handle_message(self, msg):
         msg = msg.decode('utf-8')
         self.df = self.read(self.conn, str(msg))
         sm.get_screen('server').ids.msg_label.text = self.df.to_string()
         return self.df.to_string()
+
 
 # driver function
 if __name__ == "__main__":
